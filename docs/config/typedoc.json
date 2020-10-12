@@ -1,0 +1,14 @@
+{
+    "mode": "modules",
+    "out": "docs/generated",
+    "readme": "docs/API_BASE_README.md",
+    "exclude": [
+        "**/*+(.spec).ts*"
+    ],
+    "excludePrivate": true,
+    "hideBreadcrumbs": false,
+    "hideSources": true,
+    "plugin": [
+        "typedoc-plugin-markdown"
+    ]
+}

@@ -1,0 +1,12 @@
+.nyc_output/
+.idea/
+.github/
+coverage/
+node_modules/
+src/
+tsconfig.json
+tslint.json
+*.test.*
+*.spec.*
+example/
+docs/

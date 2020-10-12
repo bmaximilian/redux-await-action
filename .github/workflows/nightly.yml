@@ -1,0 +1,68 @@
+name: CI for nightly build
+
+on:
+  push:
+    branches:
+      - main
+      # - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      NODE_ENV: production
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Cache npm cache
+        uses: actions/cache@v2
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Install Dependencies
+        run: npm i
+        env:
+          NODE_ENV: development
+
+      - name: Set Version
+        run: "npm version 0.0.0-${GITHUB_SHA: -7} --git-tag-version=false"
+
+      - name: Static Code Analysis
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm run test:cov
+
+      - name: Build
+        run: npm run build
+
+      - name: Archive
+        run: npm pack
+
+      - name: Create Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: redux-await-action-next
+          path: ./*.tgz
+
+      - name: Publish
+        run: npm publish --tag=next
