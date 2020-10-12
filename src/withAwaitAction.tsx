@@ -1,4 +1,11 @@
-import React, { ComponentType, forwardRef, ForwardRefRenderFunction } from 'react';
+import React, {
+    ComponentType,
+    forwardRef,
+    ForwardRefExoticComponent,
+    ForwardRefRenderFunction,
+    PropsWithoutRef,
+    RefAttributes,
+} from 'react';
 import { Action } from 'redux';
 import { ReactReduxContext } from 'react-redux';
 import { AwaitEventEmitterContext } from './context/awaitEventEmitterContext';
@@ -14,7 +21,9 @@ export interface WithAwaitAction<S extends Action = Action> {
  * @param WrappedComponent - The wrapped component
  * @returns - The enhanced component with storeAwait prop
  */
-export function withAwaitAction<P = any>(WrappedComponent: ComponentType<P & WithAwaitAction>): ComponentType<P> {
+export function withAwaitAction<P = any>(
+    WrappedComponent: ComponentType<P & WithAwaitAction>,
+): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<unknown>> {
     const componentName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
     /**
@@ -46,5 +55,5 @@ export function withAwaitAction<P = any>(WrappedComponent: ComponentType<P & Wit
     hoc.displayName = `withAwaitAction(${componentName})`;
     forwardedHoc.displayName = `withAwaitAction(${componentName})`;
 
-    return hoc;
+    return forwardedHoc;
 }

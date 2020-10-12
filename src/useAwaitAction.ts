@@ -9,7 +9,7 @@ import { ActionTypes, createAwaitAction } from './createAwaitAction';
  *
  * @returns - A function to wait for specific actions
  */
-export function useAwaitAction<S extends Action = Action>(): (s: ActionTypes, e: ActionTypes) => Promise<S> {
+export function useAwaitAction<S extends Action = Action>(): (s: ActionTypes, e?: ActionTypes) => Promise<S> {
     const store = useStore();
     const eventEmitter = useContext(AwaitEventEmitterContext);
 

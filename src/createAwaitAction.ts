@@ -3,7 +3,7 @@ import { StoreAwaitEventEmitter } from './StoreAwaitEventEmitter';
 
 export type ActionTypes = string | string[];
 
-export type StoreAwait<S extends Action = Action> = (s: ActionTypes, e: ActionTypes) => Promise<S>;
+export type StoreAwait<S extends Action = Action> = (s: ActionTypes, e?: ActionTypes) => Promise<S>;
 
 /**
  * Creates the await action function
@@ -29,17 +29,12 @@ export function createAwaitAction<
      */
     return function awaitAction<S extends Action = Action>(
         successTypes: string | string[],
-        errorTypes: string | string[],
+        errorTypes?: string | string[],
     ): Promise<S> {
-        const successActionTypes = Array.isArray(successTypes) ? successTypes : [successTypes];
-        const errorActionTypes = Array.isArray(errorTypes) ? errorTypes : [errorTypes];
+        const successActionTypes = Array.isArray(successTypes) ? successTypes : [successTypes].filter(Boolean);
+        const errorActionTypes = Array.isArray(errorTypes) ? errorTypes : [errorTypes].filter(Boolean);
 
         return new Promise((resolve, reject) => {
-            if (!store) {
-                reject(new Error('Store not found. You need to be inside a react component.'));
-                return;
-            }
-
             /**
              * Subscribes to the store events and resolves or rejects the promise
              *
