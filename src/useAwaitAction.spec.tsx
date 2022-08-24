@@ -216,6 +216,7 @@ describe('useAwaitAction', () => {
 
     it('Should not re-initialize when storeAwait when component re-renders', async () => {
         const renderCounter = jest.fn();
+
         /**
          * -
          * @returns TestComponent
