@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, DispatchProp, Provider } from 'react-redux';
 import { act } from 'react-dom/test-utils';
 import { render } from '@testing-library/react';
@@ -212,5 +212,39 @@ describe('useAwaitAction', () => {
         }).toThrow('You need to access the await inside the <StoreAwaitProvider> component');
 
         console.error = errorHandler; // eslint-disable-line no-console
+    });
+
+    it('Should not re-initialize when storeAwait when component re-renders', async () => {
+        const renderCounter = jest.fn();
+
+        /**
+         * -
+         * @returns TestComponent
+         */
+        const TestComponent = (): any => {
+            const storeAwait = useAwaitAction();
+            const [, triggerRender] = useState<null>();
+
+            useEffect(() => {
+                triggerRender(null);
+            });
+
+            useEffect(() => {
+                renderCounter();
+            }, [storeAwait]);
+
+            return null;
+        };
+
+        act(() => {
+            render(
+                <Provider store={store}>
+                    <StoreAwaitProvider emitter={eventEmitter}>
+                        <TestComponent />
+                    </StoreAwaitProvider>
+                </Provider>,
+            );
+        });
+        expect(renderCounter).toHaveBeenCalledTimes(1);
     });
 });
