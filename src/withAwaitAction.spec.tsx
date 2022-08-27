@@ -56,6 +56,7 @@ describe('withAwaitAction', () => {
                 return null;
             }
         }
+
         const TestComponent = connect()(withAwaitAction(RawTestComponent));
 
         const fullComponent = (
@@ -220,5 +221,28 @@ describe('withAwaitAction', () => {
         }).toThrow('You need to access the await inside the <StoreAwaitProvider> component');
 
         console.error = errorHandler; // eslint-disable-line no-console
+    });
+
+    // Not easily possible when rendering class components
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip('Should not re-initialize when storeAwait when component re-renders', async () => {
+        let previousStoreAwait;
+        let nextStoreAwait;
+
+        const { rerender } = render(
+            createStoreAwaitComponents(storeAwait => {
+                previousStoreAwait = storeAwait;
+            }, jest.fn()),
+        );
+
+        rerender(
+            createStoreAwaitComponents(storeAwait => {
+                nextStoreAwait = storeAwait;
+            }, jest.fn()),
+        );
+
+        expect(previousStoreAwait).toBeDefined();
+        expect(nextStoreAwait).toBeDefined();
+        expect(previousStoreAwait).toBe(nextStoreAwait);
     });
 });

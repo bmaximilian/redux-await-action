@@ -18,6 +18,7 @@ export interface WithAwaitAction<S extends Action = Action> {
 /**
  * Creates a hoc that attaches the storeAwait method to the wrapped component
  *
+ * @deprecated - please use "useMemo" instead
  * @param WrappedComponent - The wrapped component
  * @returns - The enhanced component with storeAwait prop
  */
