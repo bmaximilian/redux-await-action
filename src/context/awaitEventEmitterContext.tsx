@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, PropsWithChildren } from 'react';
 import { StoreAwaitEventEmitter } from '../StoreAwaitEventEmitter';
 
 export const AwaitEventEmitterContext = createContext<StoreAwaitEventEmitter | undefined>(undefined);
@@ -13,6 +13,6 @@ interface StoreAwaitProviderProps {
  * @param props - The provider props
  * @returns - The rendered component
  */
-export const StoreAwaitProvider: React.FC<StoreAwaitProviderProps> = props => (
+export const StoreAwaitProvider: React.FC<PropsWithChildren<StoreAwaitProviderProps>> = props => (
     <AwaitEventEmitterContext.Provider value={props.emitter}>{props.children}</AwaitEventEmitterContext.Provider>
 );
